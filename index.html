@@ -368,6 +368,11 @@
     </div>
     <p class="tagline">Your health journey, gamified.</p>
     <div class="support-badge">Support Center</div>
+    <nav style="margin-top:24px;display:flex;justify-content:center;gap:28px;flex-wrap:wrap;">
+      <a href="#faq" style="color:var(--text-muted);font-size:14px;font-weight:500;text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-muted)'">FAQ</a>
+      <a href="#privacy" style="color:var(--text-muted);font-size:14px;font-weight:500;text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-muted)'">Privacy Policy</a>
+      <a href="#contact" style="color:var(--text-muted);font-size:14px;font-weight:500;text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-muted)'">Contact</a>
+    </nav>
   </header>
 
   <!-- ── MAIN ── -->
@@ -528,6 +533,79 @@
               If your question isn't answered here, you can reach our support team directly at <a href="mailto:support@healthbar.app">support@healthbar.app</a>. Please include your device model, iOS version, and a short description of the issue — screenshots are always helpful. We aim to respond within one business day. You can also reach us through the <strong>Settings → Help → Contact Support</strong> shortcut in the app, which automatically attaches basic diagnostic information to help us resolve your issue faster.
             </div>
           </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRIVACY POLICY -->
+    <section id="privacy" style="margin-bottom:72px;">
+      <p class="section-label">Legal</p>
+      <h2 class="section-title">Privacy Policy</h2>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:36px 32px;display:flex;flex-direction:column;gap:28px;">
+
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.75;margin-top:-8px;">
+          <em>Last updated: April 3, 2026</em><br/>
+          This Privacy Policy explains how HealthBar ("we", "our", or "us") collects, uses, and protects your information when you use the HealthBar iOS application. By using HealthBar, you agree to the practices described below.
+        </p>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">1. Information We Collect</h3>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">We collect only the information necessary to provide the app's features:</p>
+          <ul style="color:var(--text-muted);font-size:14.5px;line-height:1.9;margin-top:8px;padding-left:20px;">
+            <li><strong style="color:var(--text);font-weight:600;">Account information:</strong> Your email address, collected at sign-up via Firebase Authentication. We do not collect your name unless you choose to add it to your profile.</li>
+            <li><strong style="color:var(--text);font-weight:600;">Food logs:</strong> Meals, food items, portion sizes, and timestamps you log within the app.</li>
+            <li><strong style="color:var(--text);font-weight:600;">Health profile data:</strong> Age, biological sex, height, weight, activity level, and health goal that you provide during onboarding or when updating your profile. This data is used solely to calculate your personalised nutrition targets.</li>
+            <li><strong style="color:var(--text);font-weight:600;">Device information:</strong> Basic device identifiers, iOS version, and crash/diagnostic data collected automatically to help us fix bugs and improve performance. This data is anonymised and cannot be used to identify you personally.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">2. How We Use Your Information</h3>
+          <ul style="color:var(--text-muted);font-size:14.5px;line-height:1.9;padding-left:20px;">
+            <li>To provide and operate the HealthBar app, including tracking meals, streaks, XP, and ranking progress.</li>
+            <li>To calculate your daily calorie and macro targets based on your health profile using established nutritional formulas.</li>
+            <li>To sync your data across multiple devices when you are signed in to your account.</li>
+            <li>To generate personalised AI-powered health goal suggestions using your anonymised nutrition data.</li>
+            <li>To send you optional push notifications (e.g. streak reminders), which you can disable at any time in iOS Settings.</li>
+            <li>To diagnose crashes and improve app reliability using anonymised diagnostic reports.</li>
+          </ul>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;margin-top:10px;">We do not use your data for advertising, and we do not sell, rent, or trade your personal information to any third party.</p>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">3. Third-Party Services</h3>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;margin-bottom:10px;">HealthBar relies on a small number of trusted third-party services to function:</p>
+          <ul style="color:var(--text-muted);font-size:14.5px;line-height:1.9;padding-left:20px;">
+            <li><strong style="color:var(--text);font-weight:600;">Firebase (Google LLC):</strong> Used for user authentication and cloud data storage. Your account data and logs are stored in Firebase Firestore under Google's infrastructure. Google's privacy policy applies to data processed by Firebase. See <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none;">firebase.google.com/support/privacy</a>.</li>
+            <li><strong style="color:var(--text);font-weight:600;">Anthropic Claude API:</strong> Used to generate personalised AI health goal suggestions. Only anonymised nutritional summary data (e.g. average calorie intake, macro ratios) is sent — no personally identifiable information such as your email or name is ever transmitted to Anthropic. See <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none;">anthropic.com/privacy</a>.</li>
+            <li><strong style="color:var(--text);font-weight:600;">Open Food Facts:</strong> An open-source food database used to look up nutritional information when you scan a barcode or search for a food item. Queries are made anonymously and contain no personal data. See <a href="https://world.openfoodfacts.org/privacy" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none;">openfoodfacts.org/privacy</a>.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">4. Data Storage and Security</h3>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">Your data is stored in Google Firebase, hosted on Google Cloud infrastructure with industry-standard physical and logical security controls. All data transmitted between the app and our servers is encrypted in transit using TLS (Transport Layer Security). Data at rest in Firebase Firestore is encrypted by Google by default. While no system is completely immune to security risks, we take reasonable and appropriate measures to protect your information against unauthorised access, disclosure, alteration, or destruction.</p>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">5. Data Retention and Deletion</h3>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">We retain your data for as long as your account is active. You can permanently delete your account and all associated data at any time by going to <strong style="color:var(--text);font-weight:600;">Settings → Account → Delete Account</strong> within the app. Upon deletion, your email address, health profile, meal logs, and all other personal data are permanently removed from our systems within 30 days. Anonymised, aggregated statistics derived from your data (which cannot be used to identify you) may be retained for product improvement purposes.</p>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">6. Children's Privacy</h3>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">HealthBar is intended for users aged <strong style="color:var(--text);font-weight:600;">13 and older</strong>. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has created an account or provided us with personal data, please contact us at <a href="mailto:support@healthbar.app" style="color:var(--green);text-decoration:none;">support@healthbar.app</a> and we will promptly delete the information.</p>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">7. Changes to This Policy</h3>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">We may update this Privacy Policy from time to time. When we do, we will revise the "Last updated" date at the top of this page and, for material changes, notify you via an in-app notice or email. Continued use of HealthBar after any changes constitutes your acceptance of the updated policy. We encourage you to review this policy periodically.</p>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">8. Contact</h3>
+          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">If you have any questions, concerns, or requests regarding this Privacy Policy or your personal data, please contact us at <a href="mailto:support@healthbar.app" style="color:var(--green);text-decoration:none;font-weight:500;">support@healthbar.app</a>. We will respond to all legitimate requests within a reasonable timeframe.</p>
         </div>
 
       </div>
