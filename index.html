@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthBar Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #111118;
+      --bg-hover: #16161f;
+      --border: #1e1e2e;
+      --green: #22c55e;
+      --green-dim: rgba(34, 197, 94, 0.12);
+      --green-glow: rgba(34, 197, 94, 0.25);
+      --text: #f0f0f0;
+      --text-muted: #8888a0;
+      --radius: 12px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    header {
+      text-align: center;
+      padding: 80px 24px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--green-dim);
+      border: 1.5px solid var(--green);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--green-glow);
+    }
+
+    .logo-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: var(--green);
+    }
+
+    .logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .logo-text span {
+      color: var(--green);
+    }
+
+    .tagline {
+      font-size: 17px;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
+
+    .support-badge {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 5px 14px;
+      background: var(--green-dim);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── MAIN CONTENT ────────────────────────────────────── */
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── SECTION HEADINGS ────────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+
+    /* ── FAQ ─────────────────────────────────────────────── */
+    #faq {
+      margin-bottom: 72px;
+    }
+
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .accordion-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .accordion-item.open {
+      border-color: rgba(34, 197, 94, 0.35);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.08);
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      transition: background 0.15s ease;
+    }
+
+    .accordion-trigger:hover {
+      background: var(--bg-hover);
+    }
+
+    .accordion-trigger:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: -2px;
+      border-radius: var(--radius);
+    }
+
+    .accordion-icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: var(--green-dim);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s ease, background 0.2s ease;
+    }
+
+    .accordion-item.open .accordion-icon {
+      transform: rotate(45deg);
+      background: rgba(34, 197, 94, 0.22);
+    }
+
+    .accordion-icon svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--green);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .accordion-content {
+      padding: 0 20px 20px;
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.75;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .accordion-content a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .accordion-content a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── CONTACT ─────────────────────────────────────────── */
+    #contact {
+      margin-bottom: 72px;
+    }
+
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 420px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green);
+      color: #050a05;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+    }
+
+    .contact-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
+    }
+
+    .contact-btn:active {
+      transform: translateY(0);
+    }
+
+    .contact-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: #050a05;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 600px) {
+      header {
+        padding: 60px 20px 56px;
+      }
+
+      .logo-text {
+        font-size: 24px;
+      }
+
+      .section-title {
+        font-size: 22px;
+      }
+
+      .contact-card {
+        padding: 28px 20px;
+      }
+
+      main {
+        padding: 0 16px 64px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+        </svg>
+      </div>
+      <span class="logo-text">Health<span>Bar</span></span>
+    </div>
+    <p class="tagline">Your health journey, gamified.</p>
+    <div class="support-badge">Support Center</div>
+  </header>
+
+  <!-- ── MAIN ── -->
+  <main>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <p class="section-label">Knowledge Base</p>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+
+      <div class="accordion" role="list">
+
+        <!-- Q1 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            How do I log a meal?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              To log a meal, tap the <strong>+</strong> button on the home screen or navigate to the <strong>Meals</strong> tab and tap <strong>Log a Meal</strong>. You can search for a food item by name, scan a barcode using your camera, or enter custom nutrition values manually. Once you've added all items in your meal, tap <strong>Save</strong>. Your XP and calorie totals will update immediately. You can log meals throughout the day — breakfast, lunch, dinner, and snacks are all tracked separately.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            How does the XP and ranking system work?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              Every healthy action you take earns you XP (experience points). Logging meals, hitting your calorie goal, staying within your macros, maintaining your streak, and completing daily challenges all reward XP. As you accumulate XP, you level up and advance through ranks — starting at <strong>Initiate</strong> and progressing through ranks like <strong>Warrior</strong>, <strong>Champion</strong>, and beyond. Each rank unlocks new profile badges, challenges, and cosmetic rewards. Your current rank and XP progress are always visible on your profile screen.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            What is the Purity Score?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              The Purity Score is a daily quality metric that reflects how clean and balanced your eating was on a given day. It's calculated based on factors like your macro balance, how close you stayed to your calorie goal, the ratio of whole foods to processed items in your log, sugar and sodium intake, and whether you hit key micronutrient targets. A score of 100 represents a perfect day by your profile's standards. The Purity Score is tracked over time so you can spot trends and improve week over week — think of it as your daily nutrition grade.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            How are my calorie goals calculated?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              During onboarding, HealthBar collects your age, biological sex, height, weight, and activity level, then uses the <strong>Mifflin-St Jeor equation</strong> to calculate your Basal Metabolic Rate (BMR). This is multiplied by your activity factor to estimate your Total Daily Energy Expenditure (TDEE). From there, your calorie goal is adjusted based on your stated objective — whether that's losing weight, maintaining, or building muscle. If you feel your goal needs adjusting, you can update your health profile at any time through the <strong>Profile → Settings → Update Health Profile</strong> flow.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            Can I edit or delete a logged meal?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              Yes. To edit a logged meal, go to the <strong>Meals</strong> tab and tap on the meal entry you want to change. From there you can adjust portion sizes, swap out individual food items, or add new items to the meal. To delete a meal entirely, swipe left on the meal entry and tap <strong>Delete</strong>, or open the meal and tap the trash icon in the top-right corner. Note that editing or deleting a meal will recalculate your daily totals, Purity Score, and any XP awarded for that day.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            What happens if I miss a day — do I lose my streak?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              A streak requires at least one meal to be logged before midnight in your local timezone. If you miss a full day without logging anything, your streak will reset to zero the following morning. However, HealthBar offers one <strong>Streak Shield</strong> per week — a grace item that automatically activates the first time you miss a day, preserving your streak. You can earn additional Streak Shields by completing weekly challenges or reaching milestone levels. You'll always receive a push notification in the evening if you haven't logged anything yet that day.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            How do I redo my health profile setup?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              You can update your health profile at any time by going to <strong>Profile → Settings → Health Profile</strong>. From there you can edit your weight, height, age, activity level, and goal. Changes take effect immediately and will recalculate your daily calorie and macro targets. If your stats have changed significantly — such as after substantial weight loss or a change in training volume — it's a good idea to refresh your profile so your goals stay accurate and meaningful.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            Does HealthBar work offline?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              Yes, core functionality works offline. You can log meals, view your history, and track your progress without an internet connection. Any data entered while offline is stored locally on your device and automatically synced to the cloud the next time you come online. Barcode scanning and food database searches require a connection, but previously searched or frequently used foods are cached locally for offline access. Push notifications and leaderboard features require connectivity to function.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            Is my data private and secure?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              Your privacy is a top priority. All data transmitted between the app and our servers is encrypted using TLS. Your personal health data — including weight, meals, and profile details — is never sold to third parties and is not used for advertising. You can export or permanently delete your account data at any time from <strong>Settings → Account → Manage Data</strong>. HealthBar is fully compliant with Apple's App Store privacy guidelines and applicable data protection regulations. For full details, please review our Privacy Policy linked in the app.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="accordion-item" role="listitem">
+          <button class="accordion-trigger" aria-expanded="false">
+            How do I contact support?
+            <span class="accordion-icon" aria-hidden="true">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            </span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              If your question isn't answered here, you can reach our support team directly at <a href="mailto:support@healthbar.app">support@healthbar.app</a>. Please include your device model, iOS version, and a short description of the issue — screenshots are always helpful. We aim to respond within one business day. You can also reach us through the <strong>Settings → Help → Contact Support</strong> shortcut in the app, which automatically attaches basic diagnostic information to help us resolve your issue faster.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <p class="section-label">Get Help</p>
+      <h2 class="section-title">Contact Support</h2>
+      <div class="contact-card">
+        <p>Can't find what you're looking for? Our support team is here to help. Send us an email and we'll get back to you within one business day.</p>
+        <a href="mailto:support@healthbar.app" class="contact-btn">
+          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+          support@healthbar.app
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p>&copy; 2026 HealthBar. All rights reserved.</p>
+  </footer>
+
+  <!-- ── ACCORDION JS ── -->
+  <script>
+    document.querySelectorAll('.accordion-trigger').forEach(function(trigger) {
+      trigger.addEventListener('click', function() {
+        var item = this.closest('.accordion-item');
+        var body = item.querySelector('.accordion-body');
+        var isOpen = item.classList.contains('open');
+
+        // Close all other items
+        document.querySelectorAll('.accordion-item.open').forEach(function(openItem) {
+          if (openItem !== item) {
+            openItem.classList.remove('open');
+            openItem.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
+            openItem.querySelector('.accordion-body').style.maxHeight = null;
+          }
+        });
+
+        // Toggle current item
+        if (isOpen) {
+          item.classList.remove('open');
+          this.setAttribute('aria-expanded', 'false');
+          body.style.maxHeight = null;
+        } else {
+          item.classList.add('open');
+          this.setAttribute('aria-expanded', 'true');
+          body.style.maxHeight = body.scrollHeight + 'px';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
