@@ -1,666 +1,386 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HealthBar Support</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    :root {
-      --bg: #0a0a0f;
-      --bg-card: #111118;
-      --bg-hover: #16161f;
-      --border: #1e1e2e;
-      --green: #22c55e;
-      --green-dim: rgba(34, 197, 94, 0.12);
-      --green-glow: rgba(34, 197, 94, 0.25);
-      --text: #f0f0f0;
-      --text-muted: #8888a0;
-      --radius: 12px;
-    }
+<!-- set theme before paint (dark default) -->
+<script>(function(){try{var t=localStorage.getItem('oh-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 
-    html {
-      scroll-behavior: smooth;
-    }
+<!-- ============ SEO / SEARCH ============ -->
+<title>Overheal — Turn Your Health Into a Game | iPhone App</title>
+<meta name="description" content="Overheal turns eating well into XP, levels, and daily quests. Log meals with a photo, keep your streak alive, and climb a nine-rank ladder against friends. Free on iPhone." />
+<meta name="keywords" content="Overheal, gamified nutrition, calorie tracker, macro tracker, food logging app, AI food tracker, fitness game, health RPG, pixel, iPhone health app" />
+<meta name="theme-color" content="#070B14" />
+<link rel="canonical" href="https://vishnuumanikandan.github.io/HealthbarSupportWebsite/" />
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Overheal" />
+<meta property="og:title" content="Overheal — Turn Your Health Into a Game" />
+<meta property="og:description" content="Eating well, but make it a game. Earn XP, complete daily quests, keep your streak, and climb a nine-rank ladder against friends." />
+<meta property="og:url" content="https://vishnuumanikandan.github.io/HealthbarSupportWebsite/" />
+<meta property="og:image" content="https://vishnuumanikandan.github.io/HealthbarSupportWebsite/app-icon.png" />
+<meta property="og:image:width" content="1024" />
+<meta property="og:image:height" content="1024" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Overheal — Turn Your Health Into a Game" />
+<meta name="twitter:description" content="Eating well, but make it a game. Earn XP, keep your streak, and climb the ranks." />
+<meta name="twitter:image" content="https://vishnuumanikandan.github.io/HealthbarSupportWebsite/app-icon.png" />
 
-    /* ── HEADER ─────────────────────────────────────────── */
-    header {
-      text-align: center;
-      padding: 80px 24px 72px;
-      position: relative;
-      overflow: hidden;
-    }
+<!-- favicon: the real Overheal app icon -->
+<link rel="icon" href="app-icon.png" />
+<link rel="apple-touch-icon" href="app-icon.png" />
 
-    header::before {
-      content: '';
-      position: absolute;
-      top: -120px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"MobileApplication","name":"Overheal","applicationCategory":"HealthApplication","operatingSystem":"iOS","description":"Overheal turns eating well into XP, levels, and daily quests. Log meals with a photo, keep your streak alive, and climb a nine-rank ladder against friends.","url":"https://vishnuumanikandan.github.io/HealthbarSupportWebsite/","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
 
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Silkscreen:wght@400;700&family=Hanken+Grotesk:ital,wght@0,300..800;1,400&display=swap" rel="stylesheet" />
 
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--green-dim);
-      border: 1.5px solid var(--green);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px var(--green-glow);
-    }
-
-    .logo-icon svg {
-      width: 26px;
-      height: 26px;
-      fill: var(--green);
-    }
-
-    .logo-text {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text);
-    }
-
-    .logo-text span {
-      color: var(--green);
-    }
-
-    .tagline {
-      font-size: 17px;
-      color: var(--text-muted);
-      font-weight: 400;
-      letter-spacing: 0.01em;
-    }
-
-    .support-badge {
-      display: inline-block;
-      margin-top: 18px;
-      padding: 5px 14px;
-      background: var(--green-dim);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--green);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    /* ── MAIN CONTENT ────────────────────────────────────── */
-    main {
-      flex: 1;
-      width: 100%;
-      max-width: 740px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
-
-    /* ── SECTION HEADINGS ────────────────────────────────── */
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--green);
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 26px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      margin-bottom: 32px;
-      color: var(--text);
-    }
-
-    /* ── FAQ ─────────────────────────────────────────────── */
-    #faq {
-      margin-bottom: 72px;
-    }
-
-    .accordion {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .accordion-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .accordion-item.open {
-      border-color: rgba(34, 197, 94, 0.35);
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.08);
-    }
-
-    .accordion-trigger {
-      width: 100%;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      text-align: left;
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      line-height: 1.4;
-      transition: background 0.15s ease;
-    }
-
-    .accordion-trigger:hover {
-      background: var(--bg-hover);
-    }
-
-    .accordion-trigger:focus-visible {
-      outline: 2px solid var(--green);
-      outline-offset: -2px;
-      border-radius: var(--radius);
-    }
-
-    .accordion-icon {
-      flex-shrink: 0;
-      width: 22px;
-      height: 22px;
-      background: var(--green-dim);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.25s ease, background 0.2s ease;
-    }
-
-    .accordion-item.open .accordion-icon {
-      transform: rotate(45deg);
-      background: rgba(34, 197, 94, 0.22);
-    }
-
-    .accordion-icon svg {
-      width: 12px;
-      height: 12px;
-      stroke: var(--green);
-      fill: none;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-    }
-
-    .accordion-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-    }
-
-    .accordion-content {
-      padding: 0 20px 20px;
-      color: var(--text-muted);
-      font-size: 14.5px;
-      line-height: 1.75;
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
-    }
-
-    .accordion-content a {
-      color: var(--green);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .accordion-content a:hover {
-      text-decoration: underline;
-    }
-
-    /* ── CONTACT ─────────────────────────────────────────── */
-    #contact {
-      margin-bottom: 72px;
-    }
-
-    .contact-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 40px 32px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .contact-card::before {
-      content: '';
-      position: absolute;
-      bottom: -60px;
-      right: -60px;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .contact-card p {
-      color: var(--text-muted);
-      font-size: 15px;
-      max-width: 420px;
-      margin: 0 auto 28px;
-      line-height: 1.7;
-    }
-
-    .contact-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--green);
-      color: #050a05;
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      padding: 13px 28px;
-      border-radius: 8px;
-      text-decoration: none;
-      letter-spacing: 0.01em;
-      transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
-    }
-
-    .contact-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
-    }
-
-    .contact-btn:active {
-      transform: translateY(0);
-    }
-
-    .contact-btn svg {
-      width: 16px;
-      height: 16px;
-      stroke: #050a05;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* ── FOOTER ──────────────────────────────────────────── */
-    footer {
-      text-align: center;
-      padding: 24px;
-      border-top: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 13px;
-    }
-
-    /* ── RESPONSIVE ──────────────────────────────────────── */
-    @media (max-width: 600px) {
-      header {
-        padding: 60px 20px 56px;
-      }
-
-      .logo-text {
-        font-size: 24px;
-      }
-
-      .section-title {
-        font-size: 22px;
-      }
-
-      .contact-card {
-        padding: 28px 20px;
-      }
-
-      main {
-        padding: 0 16px 64px;
-      }
-    }
-  </style>
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- ── HEADER ── -->
-  <header>
-    <div class="logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
-        </svg>
-      </div>
-      <span class="logo-text">Health<span>Bar</span></span>
+<div class="scan" aria-hidden="true"></div>
+<div class="wash" aria-hidden="true"></div>
+
+<!-- ============================================================
+     Rank plaques + gem — the REAL in-app rank emblems.
+     Traced from the app's ground-truth (design/erewhon/rank-plaques.html).
+     Each is a <symbol>; referenced elsewhere via <use href="#rank-…">.
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="gem" viewBox="0 0 8 8"><rect x="2" y="0" width="4" height="1"/><rect x="1" y="1" width="6" height="1"/><rect x="0" y="2" width="8" height="3"/><rect x="1" y="5" width="6" height="1"/><rect x="2" y="6" width="4" height="1"/><rect x="3" y="7" width="2" height="1"/></symbol>
+
+<symbol id="rank-stone" viewBox="0 0 40 44"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#1A1F28" stroke="#3A3F47" stroke-width="1.4"/><polygon points="20,6 33.4,13.8 33.4,29.6 20,37.5 6.6,29.6 6.6,13.8" fill="none" stroke="#252B35" stroke-width="1"/><g transform="translate(8.6,10) scale(0.71)"><path d="M16 3 27 9v14L16 29 5 23V9z" fill="#3A3F47"/><path d="M16 6 24 10.5v11L16 26 8 21.5v-11z" fill="#565D68"/><path d="M16 6v20M8 10.5l8 4.5 8-4.5M16 15v11" stroke="#3A3F47" stroke-width="1.4" fill="none"/><path d="M12 9.5 16 7.7l4 1.8" stroke="#9AA1AC" stroke-width="1.3" fill="none" stroke-linecap="round"/></g></symbol>
+
+<symbol id="rank-copper" viewBox="0 0 40 44"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#1A1F28" stroke="#7A4526" stroke-width="1.4"/><polygon points="20,6 33.4,13.8 33.4,29.6 20,37.5 6.6,29.6 6.6,13.8" fill="none" stroke="#252B35" stroke-width="1"/><g transform="translate(8.6,10) scale(0.71)"><path d="M16 2 28 8v9c0 6-5 10.5-12 13C9 27.5 4 23 4 17V8z" fill="#7A4526"/><path d="M16 4.5 25.5 9.3v7.5c0 4.8-4 8.5-9.5 10.7C10.5 25.3 6.5 21.6 6.5 16.8V9.3z" fill="#C9784A"/><path d="M16 9 21 18h-10z" fill="#7A4526"/><path d="M16 12.2 18.6 17h-5.2z" fill="#E8A876"/><circle cx="9.5" cy="11" r="1.1" fill="#E8A876"/><circle cx="22.5" cy="11" r="1.1" fill="#E8A876"/></g></symbol>
+
+<symbol id="rank-iron" viewBox="0 0 40 44"><defs><clipPath id="hxi"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6"/></clipPath></defs><polygon points="20,1.5 37.5,11.6 37.5,32 20,42 2.5,32 2.5,11.6" fill="none" stroke="#A8B2C0" stroke-width="1" opacity="0.22"/><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#1A1F28" stroke="#A8B2C0" stroke-width="1.4"/><polygon points="2,14 14,2 20,2 4,20" fill="#DDE3EA" opacity="0.08" clip-path="url(#hxi)"/><g transform="translate(8.6,10) scale(0.71)"><path d="M16 2 28 8v9c0 6-5 10.5-12 13C9 27.5 4 23 4 17V8z" fill="#525A66"/><path d="M16 4.5 25.5 9.3v7.5c0 4.8-4 8.5-9.5 10.7C10.5 25.3 6.5 21.6 6.5 16.8V9.3z" fill="#A8B2C0"/><path d="M16 4.5v23M6.5 13.5h19" stroke="#525A66" stroke-width="2.2"/><circle cx="16" cy="13.5" r="3.4" fill="#525A66"/><circle cx="16" cy="13.5" r="1.7" fill="#DDE3EA"/><circle cx="10" cy="9.5" r="1" fill="#DDE3EA"/><circle cx="22" cy="9.5" r="1" fill="#DDE3EA"/><circle cx="10" cy="19" r="1" fill="#DDE3EA"/><circle cx="22" cy="19" r="1" fill="#DDE3EA"/></g></symbol>
+
+<symbol id="rank-gold" viewBox="0 0 40 44"><defs><clipPath id="hxg"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6"/></clipPath></defs><polygon points="20,1.5 37.5,11.6 37.5,32 20,42 2.5,32 2.5,11.6" fill="none" stroke="#E8B84B" stroke-width="1" opacity="0.3"/><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#1B2029" stroke="#E8B84B" stroke-width="1.4"/><polygon points="0,16 16,0 23,0 3,22" fill="#FFF0C4" opacity="0.12" clip-path="url(#hxg)"/><g transform="translate(8.6,10) scale(0.71)"><path d="M16 1.5 19.6 9l8.2 1-6 5.6 1.6 8.2L16 19.9 8.6 23.8l1.6-8.2-6-5.6 8.2-1z" fill="#9A7220"/><path d="M16 4.6 18.6 10l6 .8-4.4 4.1 1.1 6L16 18l-5.3 2.9 1.1-6L7.4 10.8l6-.8z" fill="#E8B84B"/><path d="M16 4.6v13.4M13.4 10l-6 .8M18.6 10l6 .8" stroke="#9A7220" stroke-width="1.2" fill="none"/><circle cx="16" cy="13" r="2" fill="#FFF0C4"/><path d="M4 27h24" stroke="#9A7220" stroke-width="1.6" stroke-linecap="round"/><path d="M8 27l2-3M24 27l-2-3" stroke="#9A7220" stroke-width="1.4" stroke-linecap="round"/></g></symbol>
+
+<symbol id="rank-platinum" viewBox="0 0 40 44"><defs><clipPath id="hxp"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6"/></clipPath></defs><polygon points="20,-0.5 39.5,10.7 39.5,33 20,44 0.5,33 0.5,10.7" fill="none" stroke="#4882FF" stroke-width="1" opacity="0.16"/><polygon points="20,1.5 37.5,11.6 37.5,32 20,42 2.5,32 2.5,11.6" fill="none" stroke="#4882FF" stroke-width="1" opacity="0.34"/><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#1B2029" stroke="#4882FF" stroke-width="1.4"/><polygon points="0,16 16,0 23,0 3,22" fill="#D6E4FF" opacity="0.13" clip-path="url(#hxp)"/><g transform="translate(8.6,10) scale(0.71)"><path d="M16 3 8 11l3 2.6L16 9l5 4.6L24 11z" fill="#2B57C4"/><path d="M16 9.5 9.5 16l3 2.6 3.5-3.4 3.5 3.4 3-2.6z" fill="#4882FF"/><path d="M16 16.5 11 21.5l5 6 5-6z" fill="#4882FF"/><path d="M16 20l-2.4 2.3L16 25l2.4-2.7z" fill="#AFCBFF"/><path d="M3.5 14.5 7 17M28.5 14.5 25 17" stroke="#AFCBFF" stroke-width="1.5" stroke-linecap="round"/></g></symbol>
+
+<symbol id="rank-diamond" viewBox="0 0 40 44"><defs><clipPath id="hxd"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6"/></clipPath></defs><polygon points="20,-0.5 39.5,10.7 39.5,33 20,44 0.5,33 0.5,10.7" fill="none" stroke="#4882FF" stroke-width="1" opacity="0.18"/><polygon points="20,1.5 37.5,11.6 37.5,32 20,42 2.5,32 2.5,11.6" fill="none" stroke="#4882FF" stroke-width="1.1" opacity="0.4"/><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#1B2029" stroke="#4882FF" stroke-width="1.5"/><polygon points="0,17 17,0 24,0 3,23" fill="#D6E4FF" opacity="0.16" clip-path="url(#hxd)"/><polygon points="26,44 40,29 40,23 24,42" fill="#D6E4FF" opacity="0.07" clip-path="url(#hxd)"/><g transform="translate(8.6,10) scale(0.71)"><path d="M9 4h14l6 8-13 17L3 12z" fill="#2B57C4"/><path d="M9 4l7 8-7 0-3 0 3-8zM23 4l-7 8h7l3 0zM16 12 9 12l7 15zM16 12h7l-7 15z" fill="#4882FF"/><path d="M9 4h14M16 12H3M16 12h13M9 4l7 8 7-8M16 12l0 17" stroke="#1E3F94" stroke-width="1.1" fill="none"/><path d="M12 7.5 14.5 4.8" stroke="#D6E4FF" stroke-width="1.5" stroke-linecap="round"/><circle cx="26" cy="3.5" r="1" fill="#D6E4FF"/><circle cx="5" cy="6" r="0.8" fill="#D6E4FF"/></g></symbol>
+
+<symbol id="rank-sentinel" viewBox="0 0 40 44"><defs><clipPath id="hx7"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6"/></clipPath></defs><polygon points="20,-0.5 39.5,10.7 39.5,33 20,44 0.5,33 0.5,10.7" fill="none" stroke="#6D4DD8" stroke-width="1" opacity="0.28"/><polygon points="20,1.5 37.5,11.6 37.5,32 20,42 2.5,32 2.5,11.6" fill="none" stroke="#58E0E8" stroke-width="1.1" opacity="0.4"/><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#201F33" stroke="#8F7BE8" stroke-width="1.5"/><polygon points="0,17 17,0 24,0 3,23" fill="#C9F4FF" opacity="0.15" clip-path="url(#hx7)"/><g transform="translate(8.6,10) scale(0.71)"><path d="M16 5 26 9.5v7c0 5-4 8.7-10 11-6-2.3-10-6-10-11v-7z" fill="#3A2E7A"/><path d="M16 7.3 23.8 10.8v5.5c0 3.9-3.2 6.8-7.8 8.7v-15z" fill="#6D4DD8"/><path d="M16 7.3 8.2 10.8v5.5c0 3.9 3.2 6.8 7.8 8.7v-15z" fill="#4882FF"/><path d="M16 10.5 18 15h-4z" fill="#EDF6FF"/><path d="M16 15v6" stroke="#C9F4FF" stroke-width="1.6" stroke-linecap="round"/><path d="M2 10c2.5-.5 4.5.3 6 2.2M2 14c2-.3 3.6.4 5 1.8" stroke="#58E0E8" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M30 10c-2.5-.5-4.5.3-6 2.2M30 14c-2-.3-3.6.4-5 1.8" stroke="#E58BE0" stroke-width="1.4" fill="none" stroke-linecap="round"/></g></symbol>
+
+<symbol id="rank-prismatic" viewBox="0 0 40 44"><defs><clipPath id="hx8"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6"/></clipPath></defs><polygon points="20,-1.5 40.5,10.2 40.5,33.4 20,45 -0.5,33.4 -0.5,10.2" fill="none" stroke="#E58BE0" stroke-width="1" opacity="0.2"/><polygon points="20,-0.5 39.5,10.7 39.5,33 20,44 0.5,33 0.5,10.7" fill="none" stroke="#6D4DD8" stroke-width="1" opacity="0.32"/><polygon points="20,1.5 37.5,11.6 37.5,32 20,42 2.5,32 2.5,11.6" fill="none" stroke="#58E0E8" stroke-width="1.1" opacity="0.45"/><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#221F35" stroke="#8F7BE8" stroke-width="1.5"/><polygon points="0,17 17,0 24,0 3,23" fill="#C9F4FF" opacity="0.17" clip-path="url(#hx8)"/><polygon points="26,44 40,29 40,24 24,42" fill="#F3D2F5" opacity="0.08" clip-path="url(#hx8)"/><g transform="translate(8.6,10) scale(0.71)"><path d="M5 22 3 8l6.5 4.5L16 4l6.5 8.5L29 8l-2 14z" fill="#3A2E7A"/><path d="M6.5 20.5 5.2 10.8l4.6 3.2L16 6.8v13.7z" fill="#4882FF"/><path d="M25.5 20.5l1.3-9.7-4.6 3.2L16 6.8v13.7z" fill="#6D4DD8"/><circle cx="16" cy="15.5" r="2" fill="#EDF6FF"/><circle cx="9.5" cy="17" r="1.2" fill="#58E0E8"/><circle cx="22.5" cy="17" r="1.2" fill="#E58BE0"/><path d="M5 24.5h22M5 27h22" stroke="#3A2E7A" stroke-width="1.8" stroke-linecap="round"/><path d="M5 24.5h9" stroke="#58E0E8" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/><path d="M18 27h9" stroke="#E58BE0" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/></g></symbol>
+
+<symbol id="rank-zenith" viewBox="0 0 40 44"><defs><clipPath id="hx9"><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6"/></clipPath></defs><polygon points="20,-2.5 41.5,9.8 41.5,33.8 20,46 -1.5,33.8 -1.5,9.8" fill="none" stroke="#E58BE0" stroke-width="1" opacity="0.18"/><polygon points="20,-1.5 40.5,10.2 40.5,33.4 20,45 -0.5,33.4 -0.5,10.2" fill="none" stroke="#6D4DD8" stroke-width="1" opacity="0.28"/><polygon points="20,-0.5 39.5,10.7 39.5,33 20,44 0.5,33 0.5,10.7" fill="none" stroke="#58E0E8" stroke-width="1" opacity="0.4"/><polygon points="20,1.5 37.5,11.6 37.5,32 20,42 2.5,32 2.5,11.6" fill="none" stroke="#EDF6FF" stroke-width="1" opacity="0.55"/><polygon points="20,3.5 35.5,12.6 35.5,30.9 20,40 4.5,30.9 4.5,12.6" fill="#242038" stroke="#A9BFFF" stroke-width="1.6"/><polygon points="0,18 18,0 25,0 3,24" fill="#EDF6FF" opacity="0.2" clip-path="url(#hx9)"/><polygon points="25,44 40,28 40,23 23,42" fill="#F3D2F5" opacity="0.1" clip-path="url(#hx9)"/><g transform="translate(8.6,10) scale(0.71)"><path d="M16 8l-2-6M16 8l2-6" stroke="#58E0E8" stroke-width="1.4" stroke-linecap="round"/><path d="M16 8 11 3.5M16 8l5-4.5" stroke="#E58BE0" stroke-width="1.4" stroke-linecap="round"/><path d="M16 8 8.5 6M16 8l7.5-2" stroke="#6D4DD8" stroke-width="1.4" stroke-linecap="round"/><path d="M16 8.5 18.8 14l6 .9-4.4 4.2 1.1 6L16 22.2l-5.5 2.9 1.1-6-4.4-4.2 6-.9z" fill="#3A2E7A"/><path d="M16 11 18 15.2l4.4.6-3.2 3 .8 4.4L16 21.1v-10z" fill="#6D4DD8"/><path d="M16 11 14 15.2l-4.4.6 3.2 3-.8 4.4 4 -2.1v-10z" fill="#4882FF"/><circle cx="16" cy="17.5" r="1.8" fill="#EDF6FF"/><path d="M2.5 16c.6 5.4 3.2 9.2 7.5 11.5" stroke="#58E0E8" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M29.5 16c-.6 5.4-3.2 9.2-7.5 11.5" stroke="#E58BE0" stroke-width="1.5" fill="none" stroke-linecap="round"/></g></symbol>
+</defs></svg>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand" aria-label="Overheal home">
+      <span class="mark"><img src="app-icon.png" alt="Overheal icon" width="30" height="30" /></span>
+      Overheal
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#ranks">Ranks</a>
+      <a href="support.html">Support</a>
     </div>
-    <p class="tagline">Your health journey, gamified.</p>
-    <div class="support-badge">Support Center</div>
-    <nav style="margin-top:24px;display:flex;justify-content:center;gap:28px;flex-wrap:wrap;">
-      <a href="#faq" style="color:var(--text-muted);font-size:14px;font-weight:500;text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-muted)'">FAQ</a>
-      <a href="#privacy" style="color:var(--text-muted);font-size:14px;font-weight:500;text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-muted)'">Privacy Policy</a>
-      <a href="#contact" style="color:var(--text-muted);font-size:14px;font-weight:500;text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-muted)'">Contact</a>
-    </nav>
-  </header>
+    <div class="nav-cta">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light or dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+      <a href="#download" class="btn-mini">Get the app</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
 
-  <!-- ── MAIN ── -->
-  <main>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features">Features</a><a href="#how">How it works</a><a href="#ranks">Ranks</a><a href="support.html">Support</a>
+</div>
 
-    <!-- FAQ -->
-    <section id="faq">
-      <p class="section-label">Knowledge Base</p>
-      <h2 class="section-title">Frequently Asked Questions</h2>
+<span id="top"></span>
 
-      <div class="accordion" role="list">
-
-        <!-- Q1 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            How do I log a meal?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              To log a meal, tap the <strong>+</strong> button on the home screen or navigate to the <strong>Meals</strong> tab and tap <strong>Log a Meal</strong>. You can search for a food item by name, scan a barcode using your camera, or enter custom nutrition values manually. Once you've added all items in your meal, tap <strong>Save</strong>. Your XP and calorie totals will update immediately. You can log meals throughout the day — breakfast, lunch, dinner, and snacks are all tracked separately.
-            </div>
-          </div>
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow rise d1">Gamified nutrition · iPhone</span>
+        <h1 class="rise d2">Turn your<br>health into a <span class="hl">game</span></h1>
+        <p class="lead rise d3">Overheal turns eating well into XP, levels and daily quests. Log a meal with a photo, keep your streak alive, and climb a nine-rank ladder against your friends.</p>
+        <div class="hero-cta rise d4">
+          <a href="#download" class="appstore" aria-label="Download Overheal on the App Store">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            <span class="txt"><small>Download on the</small><b>App Store</b></span>
+          </a>
+          <a href="#how" class="btn btn-ghost">See how it works</a>
         </div>
-
-        <!-- Q2 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            How does the XP and ranking system work?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              Every healthy action you take earns you XP (experience points). Logging meals, hitting your calorie goal, staying within your macros, maintaining your streak, and completing daily challenges all reward XP. As you accumulate XP, you level up and advance through ranks — starting at <strong>Initiate</strong> and progressing through ranks like <strong>Warrior</strong>, <strong>Champion</strong>, and beyond. Each rank unlocks new profile badges, challenges, and cosmetic rewards. Your current rank and XP progress are always visible on your profile screen.
-            </div>
-          </div>
+        <div class="hero-meta rise d5">
+          <span class="stars" aria-hidden="true">★★★★★</span>
+          <span class="pixel">BUILT FOR IPHONE</span>
+          <span class="dot"></span>
+          <span class="pixel">FREE TO START</span>
         </div>
-
-        <!-- Q3 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            What is the Purity Score?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              The Purity Score is a daily quality metric that reflects how clean and balanced your eating was on a given day. It's calculated based on factors like your macro balance, how close you stayed to your calorie goal, the ratio of whole foods to processed items in your log, sugar and sodium intake, and whether you hit key micronutrient targets. A score of 100 represents a perfect day by your profile's standards. The Purity Score is tracked over time so you can spot trends and improve week over week — think of it as your daily nutrition grade.
-            </div>
-          </div>
-        </div>
-
-        <!-- Q4 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            How are my calorie goals calculated?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              During onboarding, HealthBar collects your age, biological sex, height, weight, and activity level, then uses the <strong>Mifflin-St Jeor equation</strong> to calculate your Basal Metabolic Rate (BMR). This is multiplied by your activity factor to estimate your Total Daily Energy Expenditure (TDEE). From there, your calorie goal is adjusted based on your stated objective — whether that's losing weight, maintaining, or building muscle. If you feel your goal needs adjusting, you can update your health profile at any time through the <strong>Profile → Settings → Update Health Profile</strong> flow.
-            </div>
-          </div>
-        </div>
-
-        <!-- Q5 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            Can I edit or delete a logged meal?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              Yes. To edit a logged meal, go to the <strong>Meals</strong> tab and tap on the meal entry you want to change. From there you can adjust portion sizes, swap out individual food items, or add new items to the meal. To delete a meal entirely, swipe left on the meal entry and tap <strong>Delete</strong>, or open the meal and tap the trash icon in the top-right corner. Note that editing or deleting a meal will recalculate your daily totals, Purity Score, and any XP awarded for that day.
-            </div>
-          </div>
-        </div>
-
-        <!-- Q6 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            What happens if I miss a day — do I lose my streak?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              A streak requires at least one meal to be logged before midnight in your local timezone. If you miss a full day without logging anything, your streak will reset to zero the following morning. However, HealthBar offers one <strong>Streak Shield</strong> per week — a grace item that automatically activates the first time you miss a day, preserving your streak. You can earn additional Streak Shields by completing weekly challenges or reaching milestone levels. You'll always receive a push notification in the evening if you haven't logged anything yet that day.
-            </div>
-          </div>
-        </div>
-
-        <!-- Q7 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            How do I redo my health profile setup?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              You can update your health profile at any time by going to <strong>Profile → Settings → Health Profile</strong>. From there you can edit your weight, height, age, activity level, and goal. Changes take effect immediately and will recalculate your daily calorie and macro targets. If your stats have changed significantly — such as after substantial weight loss or a change in training volume — it's a good idea to refresh your profile so your goals stay accurate and meaningful.
-            </div>
-          </div>
-        </div>
-
-        <!-- Q8 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            Does HealthBar work offline?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              Yes, core functionality works offline. You can log meals, view your history, and track your progress without an internet connection. Any data entered while offline is stored locally on your device and automatically synced to the cloud the next time you come online. Barcode scanning and food database searches require a connection, but previously searched or frequently used foods are cached locally for offline access. Push notifications and leaderboard features require connectivity to function.
-            </div>
-          </div>
-        </div>
-
-        <!-- Q9 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            Is my data private and secure?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              Your privacy is a top priority. All data transmitted between the app and our servers is encrypted using TLS. Your personal health data — including weight, meals, and profile details — is never sold to third parties and is not used for advertising. You can export or permanently delete your account data at any time from <strong>Settings → Account → Manage Data</strong>. HealthBar is fully compliant with Apple's App Store privacy guidelines and applicable data protection regulations. For full details, please review our Privacy Policy linked in the app.
-            </div>
-          </div>
-        </div>
-
-        <!-- Q10 -->
-        <div class="accordion-item" role="listitem">
-          <button class="accordion-trigger" aria-expanded="false">
-            How do I contact support?
-            <span class="accordion-icon" aria-hidden="true">
-              <svg viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            </span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-content">
-              If your question isn't answered here, you can reach our support team directly at <a href="mailto:support@healthbar.app">support@healthbar.app</a>. Please include your device model, iOS version, and a short description of the issue — screenshots are always helpful. We aim to respond within one business day. You can also reach us through the <strong>Settings → Help → Contact Support</strong> shortcut in the app, which automatically attaches basic diagnostic information to help us resolve your issue faster.
-            </div>
-          </div>
-        </div>
-
       </div>
-    </section>
 
-    <!-- PRIVACY POLICY -->
-    <section id="privacy" style="margin-bottom:72px;">
-      <p class="section-label">Legal</p>
-      <h2 class="section-title">Privacy Policy</h2>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:36px 32px;display:flex;flex-direction:column;gap:28px;">
+      <div class="phone-stage">
+        <div class="float f-xp"><span class="ic" style="background:var(--cyan-tint)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#38BDF8" stroke-width="2.4"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span><div><b style="color:var(--cyan)">+120 XP</b><small>PROTEIN GOAL</small></div></div>
+        <div class="float f-streak"><span class="ic" style="background:var(--blue-tint)"><svg viewBox="0 0 24 24" width="17" height="17" fill="#3B82F6"><path d="M12 2c1 3-1 4-1 6a3 3 0 006 0c0-1 0-2-1-3 3 2 4 5 4 8a8 8 0 11-16 0c0-4 3-6 4-8 1 2 2 2 4-3z"/></svg></span><div><b style="color:var(--blue-3)">21 DAY</b><small>STREAK</small></div></div>
+        <div class="float f-rank"><span class="ic"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-gold"/></svg></span><div><b style="color:var(--blue-3)">GOLD III</b><small>+18 RR</small></div></div>
 
-        <p style="color:var(--text-muted);font-size:14px;line-height:1.75;margin-top:-8px;">
-          <em>Last updated: April 3, 2026</em><br/>
-          This Privacy Policy explains how HealthBar ("we", "our", or "us") collects, uses, and protects your information when you use the HealthBar iOS application. By using HealthBar, you agree to the practices described below.
-        </p>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">1. Information We Collect</h3>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">We collect only the information necessary to provide the app's features:</p>
-          <ul style="color:var(--text-muted);font-size:14.5px;line-height:1.9;margin-top:8px;padding-left:20px;">
-            <li><strong style="color:var(--text);font-weight:600;">Account information:</strong> Your email address, collected at sign-up via Firebase Authentication. We do not collect your name unless you choose to add it to your profile.</li>
-            <li><strong style="color:var(--text);font-weight:600;">Food logs:</strong> Meals, food items, portion sizes, and timestamps you log within the app.</li>
-            <li><strong style="color:var(--text);font-weight:600;">Health profile data:</strong> Age, biological sex, height, weight, activity level, and health goal that you provide during onboarding or when updating your profile. This data is used solely to calculate your personalised nutrition targets.</li>
-            <li><strong style="color:var(--text);font-weight:600;">Device information:</strong> Basic device identifiers, iOS version, and crash/diagnostic data collected automatically to help us fix bugs and improve performance. This data is anonymised and cannot be used to identify you personally.</li>
-          </ul>
+        <div class="phone">
+          <div class="screen">
+            <div class="screen-scroll">
+              <div class="app-top">
+                <div class="app-hi"><small>Good evening</small><b>Level 14</b></div>
+                <div class="plaque"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-gold"/></svg><span class="txt"><small>Rank</small><b>Gold III</b></span></div>
+              </div>
+              <div class="card-mini">
+                <div class="hp-head"><small>Health bar</small><b>112 / 100</b></div>
+                <div class="hp"><div class="fill"></div><div class="max"></div><div class="over"></div></div>
+                <div class="xp-head"><div class="lvl"><span class="chip-lvl">LVL 14</span><span class="b">2140 XP</span></div><span>860 TO 15</span></div>
+                <div class="xp-bar"><div class="xp-fill"></div></div>
+              </div>
+              <div class="card-mini">
+                <div class="macros">
+                  <div class="macro"><div class="rn" style="color:#3B82F6">128g</div><small>Protein</small><div class="track"><div class="tf" style="width:86%;background:#3B82F6"></div></div></div>
+                  <div class="macro"><div class="rn" style="color:#38BDF8">190g</div><small>Carbs</small><div class="track"><div class="tf" style="width:64%;background:#38BDF8"></div></div></div>
+                  <div class="macro"><div class="rn" style="color:#7DD3FC">58g</div><small>Fat</small><div class="track"><div class="tf" style="width:72%;background:#7DD3FC"></div></div></div>
+                </div>
+              </div>
+              <div class="quests-h"><small>Daily quests</small><span>2 / 3 DONE</span></div>
+              <div class="card-mini" style="padding:4px">
+                <div class="quest"><span class="q-check done"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="qt">Hit your protein goal</span><span class="qx">+120</span></div>
+                <div class="quest"><span class="q-check done"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="qt">Log three meals</span><span class="qx">+80</span></div>
+                <div class="quest is-todo"><span class="q-check todo"></span><span class="qt">Stay under sugar cap</span><span class="qx">+90</span></div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">2. How We Use Your Information</h3>
-          <ul style="color:var(--text-muted);font-size:14.5px;line-height:1.9;padding-left:20px;">
-            <li>To provide and operate the HealthBar app, including tracking meals, streaks, XP, and ranking progress.</li>
-            <li>To calculate your daily calorie and macro targets based on your health profile using established nutritional formulas.</li>
-            <li>To sync your data across multiple devices when you are signed in to your account.</li>
-            <li>To generate personalised AI-powered health goal suggestions using your anonymised nutrition data.</li>
-            <li>To send you optional push notifications (e.g. streak reminders), which you can disable at any time in iOS Settings.</li>
-            <li>To diagnose crashes and improve app reliability using anonymised diagnostic reports.</li>
-          </ul>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;margin-top:10px;">We do not use your data for advertising, and we do not sell, rent, or trade your personal information to any third party.</p>
-        </div>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">3. Third-Party Services</h3>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;margin-bottom:10px;">HealthBar relies on a small number of trusted third-party services to function:</p>
-          <ul style="color:var(--text-muted);font-size:14.5px;line-height:1.9;padding-left:20px;">
-            <li><strong style="color:var(--text);font-weight:600;">Firebase (Google LLC):</strong> Used for user authentication and cloud data storage. Your account data and logs are stored in Firebase Firestore under Google's infrastructure. Google's privacy policy applies to data processed by Firebase. See <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none;">firebase.google.com/support/privacy</a>.</li>
-            <li><strong style="color:var(--text);font-weight:600;">Anthropic Claude API:</strong> Used to generate personalised AI health goal suggestions. Only anonymised nutritional summary data (e.g. average calorie intake, macro ratios) is sent — no personally identifiable information such as your email or name is ever transmitted to Anthropic. See <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none;">anthropic.com/privacy</a>.</li>
-            <li><strong style="color:var(--text);font-weight:600;">Open Food Facts:</strong> An open-source food database used to look up nutritional information when you scan a barcode or search for a food item. Queries are made anonymously and contain no personal data. See <a href="https://world.openfoodfacts.org/privacy" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none;">openfoodfacts.org/privacy</a>.</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">4. Data Storage and Security</h3>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">Your data is stored in Google Firebase, hosted on Google Cloud infrastructure with industry-standard physical and logical security controls. All data transmitted between the app and our servers is encrypted in transit using TLS (Transport Layer Security). Data at rest in Firebase Firestore is encrypted by Google by default. While no system is completely immune to security risks, we take reasonable and appropriate measures to protect your information against unauthorised access, disclosure, alteration, or destruction.</p>
-        </div>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">5. Data Retention and Deletion</h3>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">We retain your data for as long as your account is active. You can permanently delete your account and all associated data at any time by going to <strong style="color:var(--text);font-weight:600;">Settings → Account → Delete Account</strong> within the app. Upon deletion, your email address, health profile, meal logs, and all other personal data are permanently removed from our systems within 30 days. Anonymised, aggregated statistics derived from your data (which cannot be used to identify you) may be retained for product improvement purposes.</p>
-        </div>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">6. Children's Privacy</h3>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">HealthBar is intended for users aged <strong style="color:var(--text);font-weight:600;">13 and older</strong>. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has created an account or provided us with personal data, please contact us at <a href="mailto:support@healthbar.app" style="color:var(--green);text-decoration:none;">support@healthbar.app</a> and we will promptly delete the information.</p>
-        </div>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">7. Changes to This Policy</h3>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">We may update this Privacy Policy from time to time. When we do, we will revise the "Last updated" date at the top of this page and, for material changes, notify you via an in-app notice or email. Continued use of HealthBar after any changes constitutes your acceptance of the updated policy. We encourage you to review this policy periodically.</p>
-        </div>
-
-        <div>
-          <h3 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;">8. Contact</h3>
-          <p style="color:var(--text-muted);font-size:14.5px;line-height:1.75;">If you have any questions, concerns, or requests regarding this Privacy Policy or your personal data, please contact us at <a href="mailto:support@healthbar.app" style="color:var(--green);text-decoration:none;font-weight:500;">support@healthbar.app</a>. We will respond to all legitimate requests within a reasonable timeframe.</p>
-        </div>
-
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- CONTACT -->
-    <section id="contact">
-      <p class="section-label">Get Help</p>
-      <h2 class="section-title">Contact Support</h2>
-      <div class="contact-card">
-        <p>Can't find what you're looking for? Our support team is here to help. Send us an email and we'll get back to you within one business day.</p>
-        <a href="mailto:support@healthbar.app" class="contact-btn">
-          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
-          support@healthbar.app
+  <div class="wrap">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Earn XP</span><span>Daily quests</span><span>Keep your streak</span><span>Duel your friends</span><span>Join a guild</span><span>Climb the ranks</span>
+        <span>Earn XP</span><span>Daily quests</span><span>Keep your streak</span><span>Duel your friends</span><span>Join a guild</span><span>Climb the ranks</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The mechanics</span>
+      <h2 class="display">Real food.<br>Real game.</h2>
+      <p class="lead">Every good decision moves a bar. Overheal wraps genuine nutrition tracking in mechanics that actually make you want to come back tomorrow.</p>
+    </div>
+    <div class="bento">
+      <div class="cell big reveal">
+        <div class="f-ic" style="background:var(--blue-tint);color:var(--blue-3)"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+        <h3>Every meal earns XP</h3>
+        <p>Hit your goals and your health bar fills, you bank XP, and you level up. Complete daily quests, chase streak milestones, and watch a purity score grade the quality of what you eat — not just the calories.</p>
+        <div class="mini-hp">
+          <div class="row"><span class="lab">HEALTH</span><span class="bar"><span class="fill" style="width:82%;background:#3B82F6"></span></span></div>
+          <div class="row"><span class="lab">XP · L14</span><span class="bar"><span class="fill" style="width:71%;background:#38BDF8"></span></span></div>
+          <div class="row"><span class="lab">STREAK</span><span class="bar"><span class="fill" style="width:60%;background:#60A5FA"></span></span></div>
+        </div>
+      </div>
+      <div class="cell small reveal">
+        <div class="f-ic" style="background:var(--cyan-tint);color:var(--cyan)"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <h3>Log in seconds</h3>
+        <p>Snap a photo, describe it in a sentence, or scan a barcode. AI reads the plate and fills in the calories and macros for you.</p>
+        <div class="tag-row"><span class="tag">PHOTO</span><span class="tag">DESCRIBE</span><span class="tag">SCAN</span></div>
+      </div>
+      <div class="cell wide reveal">
+        <div class="f-ic" style="background:var(--blue-tint);color:var(--blue-3)"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 17.5 5-5M18 3l3 3-11 11-3-3zM6 21l-3-3 3.5-3.5 3 3z"/></svg></div>
+        <h3>Duel your friends</h3>
+        <p>Challenge anyone to a head-to-head, get matched fairly, and settle it on the global leaderboard. Winning consistency moves your rank rating.</p>
+      </div>
+      <div class="cell wide reveal">
+        <div class="f-ic" style="background:var(--cyan-tint);color:var(--cyan)"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></svg></div>
+        <h3>Better with a guild</h3>
+        <p>Join a guild, talk in real-time chat, and push each other to log. Health is easier when you are not doing it alone.</p>
+      </div>
+      <div class="cell small reveal">
+        <div class="f-ic" style="background:var(--blue-tint);color:var(--blue-3)"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg></div>
+        <h3>See your week</h3>
+        <p>A clean weekly summary, unlockable badges and streak milestones show the progress you would otherwise forget.</p>
+        <div class="tag-row"><span class="tag">BADGES</span><span class="tag">MILESTONES</span><span class="tag">TRENDS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="section" id="how" style="padding-top:16px">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">How it works</span>
+      <h2 class="display">Three taps to a<br>better streak</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="si"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <h3>Log your meal</h3>
+        <p>Photo, a quick sentence, or a barcode. It lands in your day in seconds — no scrolling a giant database.</p>
+      </div>
+      <div class="step reveal">
+        <div class="si"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+        <h3>Earn XP &amp; quests</h3>
+        <p>Good choices fill your health bar and complete the day's quests. Keep the streak, bank the XP, level up.</p>
+      </div>
+      <div class="step reveal">
+        <div class="si plaque-slot"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-zenith"/></svg></div>
+        <h3>Rank up &amp; compete</h3>
+        <p>Turn consistency into rating. Duel friends, carry your guild, and climb from Stone all the way to Zenith.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RANKS -->
+<section class="section" id="ranks">
+  <div class="wrap">
+    <div class="ranks-band reveal">
+      <div style="max-width:640px;position:relative;z-index:2">
+        <span class="eyebrow">The ladder</span>
+        <h2 class="display" style="margin:18px 0 16px">Nine ranks.<br>One climb.</h2>
+        <p class="lead">From your first logged meal to the top of the leaderboard. Every rank is earned through rank rating you win by staying consistent and beating other players.</p>
+      </div>
+      <div class="ladder">
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-stone"/></svg><b>Stone</b><small>Start</small></div>
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-copper"/></svg><b>Copper</b><small>Tier 2</small></div>
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-iron"/></svg><b>Iron</b><small>Tier 3</small></div>
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-gold"/></svg><b>Gold</b><small>Tier 4</small></div>
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-platinum"/></svg><b>Platinum</b><small>Tier 5</small></div>
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-diamond"/></svg><b>Diamond</b><small>Tier 6</small></div>
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-sentinel"/></svg><b>Sentinel</b><small>Tier 7</small></div>
+        <div class="rank"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-prismatic"/></svg><b>Prismatic</b><small>Tier 8</small></div>
+        <div class="rank zenith"><svg class="plaque-svg" viewBox="0 0 40 44" aria-hidden="true"><use href="#rank-zenith"/></svg><b>Zenith</b><small>Apex</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="note reveal">
+      <div class="avatar" aria-hidden="true"><img src="app-icon.png" alt="" /></div>
+      <div>
+        <q>I was tired of health apps that felt like homework. So I built the one I actually wanted to open — where eating well earns something, and staying consistent feels like winning.</q>
+        <div class="sig">— <b>THE MAKER OF OVERHEAL</b>, BUILT SOLO FOR PEOPLE WHO LOVE A GOOD STREAK</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Questions</span>
+      <h2 class="display">Good to know</h2>
+    </div>
+    <div class="faq">
+      <div class="q-item reveal"><button aria-expanded="false"><span>What exactly is Overheal?</span><span class="pm" aria-hidden="true"></span></button><div class="q-a"><p>A nutrition tracker with the soul of an RPG. You log what you eat, and Overheal turns it into XP, levels, daily quests, streaks and ranks — so building healthy habits feels like leveling up a character instead of filling out a spreadsheet.</p></div></div>
+      <div class="q-item reveal"><button aria-expanded="false"><span>How does logging a meal work?</span><span class="pm" aria-hidden="true"></span></button><div class="q-a"><p>Three ways: take a photo of your plate, describe the meal in plain language, or scan a barcode. Overheal's AI recognizes the food and fills in calories and macros, then asks a quick question or two only if it needs to.</p></div></div>
+      <div class="q-item reveal"><button aria-expanded="false"><span>Do I need to create an account?</span><span class="pm" aria-hidden="true"></span></button><div class="q-a"><p>No. You can start in guest mode and try everything solo. Create an account when you're ready to save your progress across devices, join a guild, and duel other players.</p></div></div>
+      <div class="q-item reveal"><button aria-expanded="false"><span>What are duels, guilds and ranks?</span><span class="pm" aria-hidden="true"></span></button><div class="q-a"><p>They're the social layer. Duels are fair head-to-head challenges against friends. Guilds are small teams with their own real-time chat. Ranks are a nine-tier ladder — Stone up to Zenith — that you climb by staying consistent and winning matchups.</p></div></div>
+      <div class="q-item reveal"><button aria-expanded="false"><span>Is it on Android?</span><span class="pm" aria-hidden="true"></span></button><div class="q-a"><p>Overheal is built natively for iPhone today. Follow along for news on where it heads next.</p></div></div>
+      <div class="q-item reveal"><button aria-expanded="false"><span>Where do I get help or report a problem?</span><span class="pm" aria-hidden="true"></span></button><div class="q-a"><p>Head to the <a href="support.html">Support page</a> for the full FAQ, or email <a href="mailto:support@overheal.app">support@overheal.app</a> and we'll get back to you within about one business day.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" id="download" style="padding-top:0">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2 class="display">Your streak<br>starts today</h2>
+      <p>Download Overheal, log your first meal, and watch the bar move. It's free to start — no account required.</p>
+      <div class="cta-row">
+        <!-- TODO: replace href="#" with the real App Store link once the app is live -->
+        <a href="#" class="appstore" aria-label="Download Overheal on the App Store">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          <span class="txt"><small>Download on the</small><b>App Store</b></span>
         </a>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-  </main>
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#top" class="brand"><span class="mark"><img src="app-icon.png" alt="Overheal icon" width="30" height="30" /></span>Overheal</a>
+        <p class="mute" style="margin-top:14px;max-width:34ch;font-size:14.5px">Eating well, but make it a game. Earn XP, keep your streak, and climb the ranks.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Product</h4><a href="#features">Features</a><a href="#how">How it works</a><a href="#ranks">Ranks</a><a href="#download">Download</a></div>
+        <div class="foot-col"><h4>Support</h4><a href="support.html">Help &amp; FAQ</a><a href="support.html#contact">Contact</a></div>
+        <div class="foot-col"><h4>Legal</h4><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© <span id="yr"></span> OVERHEAL. ALL RIGHTS RESERVED.</span><span>MADE FOR PEOPLE WHO LOVE A GOOD STREAK.</span></div>
+  </div>
+</footer>
 
-  <!-- ── FOOTER ── -->
-  <footer>
-    <p>&copy; 2026 HealthBar. All rights reserved.</p>
-  </footer>
+<script>
+(function(){
+  "use strict";
+  document.documentElement.classList.remove('no-js');
+  document.getElementById('yr').textContent = new Date().getFullYear();
 
-  <!-- ── ACCORDION JS ── -->
-  <script>
-    document.querySelectorAll('.accordion-trigger').forEach(function(trigger) {
-      trigger.addEventListener('click', function() {
-        var item = this.closest('.accordion-item');
-        var body = item.querySelector('.accordion-body');
-        var isOpen = item.classList.contains('open');
+  // theme toggle
+  var root = document.documentElement, tbtn = document.getElementById('themeToggle');
+  tbtn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('oh-theme', next); }catch(e){}
+  });
 
-        // Close all other items
-        document.querySelectorAll('.accordion-item.open').forEach(function(openItem) {
-          if (openItem !== item) {
-            openItem.classList.remove('open');
-            openItem.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
-            openItem.querySelector('.accordion-body').style.maxHeight = null;
-          }
-        });
+  var nav = document.getElementById('nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 14); };
+  onScroll(); window.addEventListener('scroll', onScroll, { passive:true });
 
-        // Toggle current item
-        if (isOpen) {
-          item.classList.remove('open');
-          this.setAttribute('aria-expanded', 'false');
-          body.style.maxHeight = null;
-        } else {
-          item.classList.add('open');
-          this.setAttribute('aria-expanded', 'true');
-          body.style.maxHeight = body.scrollHeight + 'px';
-        }
-      });
-    });
-  </script>
+  var burger = document.getElementById('hamburger');
+  var toggle = function(f){ var open = f!==undefined?f:!document.body.classList.contains('menu-open'); document.body.classList.toggle('menu-open',open); burger.setAttribute('aria-expanded',open?'true':'false'); };
+  burger.addEventListener('click', function(){ toggle(); });
+  document.querySelectorAll('#mobileMenu a').forEach(function(a){ a.addEventListener('click', function(){ toggle(false); }); });
 
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var items = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)){ items.forEach(function(el){ el.classList.add('in'); }); }
+  else {
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold:0.12, rootMargin:'0px 0px -8% 0px' });
+    document.querySelectorAll('.bento,.steps,.ladder,.faq').forEach(function(g){ Array.prototype.forEach.call(g.querySelectorAll('.reveal'), function(el,i){ el.style.transitionDelay=(i*70)+'ms'; }); });
+    items.forEach(function(el){ io.observe(el); });
+  }
+
+  document.querySelectorAll('.q-item').forEach(function(item){
+    var btn=item.querySelector('button'), ans=item.querySelector('.q-a');
+    btn.addEventListener('click', function(){ var open=item.classList.toggle('open'); btn.setAttribute('aria-expanded',open?'true':'false'); ans.style.maxHeight=open?(ans.scrollHeight+'px'):'0px'; });
+  });
+
+  if (!reduce && window.matchMedia('(pointer:fine)').matches){
+    var floats=document.querySelectorAll('.float'), stage=document.querySelector('.phone-stage');
+    if(stage){
+      stage.addEventListener('pointermove', function(ev){ var r=stage.getBoundingClientRect(), dx=(ev.clientX-r.left-r.width/2)/r.width, dy=(ev.clientY-r.top-r.height/2)/r.height; floats.forEach(function(f,i){ var m=(i+1)*6; f.style.transform='translate('+(dx*m)+'px,'+(dy*m)+'px)'; }); });
+      stage.addEventListener('pointerleave', function(){ floats.forEach(function(f){ f.style.transform=''; }); });
+    }
+  }
+})();
+</script>
 </body>
 </html>
