@@ -23,8 +23,9 @@ defined once as SVG `<symbol>`s in `index.html` and reused via `<use>`.
 
 ## Before launch — TODO
 
-- **App Store link:** the download buttons point at `href="#"` (search `TODO` in `index.html`).
-  Swap in the real App Store URL once the app is live.
+- **App Store link:** the download buttons link to the live listing by permanent Apple ID
+  (`https://apps.apple.com/app/id6761515712`), which survives the app's rename to Overheal and
+  any update — no change needed after you ship the update.
 - **Terms of Service:** `terms.html` is a template flagged for legal review — have an
   attorney tailor it to your jurisdiction before relying on it.
 - **Custom domain (optional):** the site currently lives on github.io. `overheal.app` is used
