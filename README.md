@@ -1,7 +1,8 @@
 # Overheal — Website
 
 The marketing + support site for **Overheal**, a gamified nutrition app for iPhone.
-Served via GitHub Pages at https://vishnuumanikandan.github.io/HealthbarSupportWebsite/
+Served via GitHub Pages at **https://overheal.app** (custom domain; the `CNAME` file
+points Pages at the apex, with `www` redirecting to it).
 
 ## Structure
 
@@ -28,9 +29,9 @@ defined once as SVG `<symbol>`s in `index.html` and reused via `<use>`.
   any update — no change needed after you ship the update.
 - **Terms of Service:** `terms.html` is a template flagged for legal review — have an
   attorney tailor it to your jurisdiction before relying on it.
-- **Custom domain (optional):** the site currently lives on github.io. `overheal.app` is used
-  only as the support email domain; add a `CNAME` file + update the canonical/OG URLs if you
-  point a custom domain here later.
+- **Custom domain:** live on `overheal.app` via the `CNAME` file. DNS (at the registrar) uses
+  A/AAAA records for the apex → GitHub Pages IPs, and a `www` CNAME → `vishnuumanikandan.github.io`.
+  After the first deploy, enable **Settings → Pages → Enforce HTTPS**.
 
 ## Local preview
 
