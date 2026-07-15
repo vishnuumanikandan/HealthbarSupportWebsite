@@ -127,9 +127,11 @@ body.menu-open .mobile-menu a:nth-child(4){transition-delay:.24s}
 .hero{position:relative;padding:168px 0 84px}
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
 .hero h1{font-family:'Bebas Neue',sans-serif;text-transform:uppercase;line-height:.86;letter-spacing:.004em;
-  font-size:clamp(3.6rem,8.4vw,7.4rem);color:var(--ink);margin:22px 0 24px}
-.hero h1 .hl{position:relative;color:var(--blue-3);white-space:nowrap}
-.hero h1 .hl::after{content:'';position:absolute;left:0;right:0;bottom:-.12em;height:8px;
+  font-size:clamp(3.6rem,8.4vw,7.4rem);color:var(--ink);margin:22px 0 34px}
+/* inline-block + tight line-height makes the box hug the glyphs, so the pixel
+   underline anchors just under GAME instead of drifting down the empty line box */
+.hero h1 .hl{position:relative;display:inline-block;line-height:.74;color:var(--blue-3);white-space:nowrap}
+.hero h1 .hl::after{content:'';position:absolute;left:0;right:0;bottom:-.1em;height:8px;
   background:repeating-linear-gradient(90deg,var(--cyan) 0 12px,transparent 12px 18px)}
 .hero-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:34px}
 .hero-meta{display:flex;align-items:center;gap:18px;margin-top:24px;color:var(--ink-mute);font-size:14px;flex-wrap:wrap}
